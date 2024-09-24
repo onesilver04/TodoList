@@ -7,6 +7,10 @@
   user-select: none;
 }
 
+.todo-item:hover .check-mark {
+  display: none; /* 마우스를 올렸을 때 체크 표시를 숨김 */
+}
+
 .todo-item:hover {
   background: #e3fafc;
 }
@@ -44,4 +48,21 @@
   margin-left: 1rem;
   color: #3bc9db;
   font-weight: 800;
+}
+
+.todo-item .delete-button {
+  display: none; /* 처음에는 숨김 */
+}
+
+.todo-item:hover .delete-button {
+  display: inline-block; /* hover 시에만 보여줌 */
+  margin-left: 10px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.delete-button {
+  width: 25px; /* 이미지 크기 조정 */
+  height: 20px;
+  cursor: pointer;
 }
