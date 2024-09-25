@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Playwrite+DE+Grund:wght@100..400&display=swap");
+
 .form {
   display: flex;
 }
@@ -8,6 +10,15 @@
   outline: none;
   border: none;
   border-bottom: 1px solid #c5f6fa;
+  font-family: sans-serif;
+  background: #f9f9f9;
+  font-family: "Playwrite DE Grund", cursive;
+  font-optical-sizing: auto;
+}
+
+/* 입력창에 포커스 되었을 때 (클릭하거나 활성화 시) */
+.form input:focus {
+  border-bottom: 2px solid #22b8cf; /* 밑줄을 두껍게 하고 색상을 강조 */
 }
 
 .create-button {
@@ -21,6 +32,9 @@
   color: white;
   font-weight: 600;
   cursor: pointer;
+  font-family: sans-serif;
+  font-family: "Playwrite DE Grund", cursive;
+  font-optical-sizing: auto;
 }
 
 .create-button:hover {
