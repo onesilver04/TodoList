@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import TodoListTemplate from "./components/TodoListTemplate";
 import Form from "./components/Form";
 import TodoItemList from "./components/TodoItemList";
+
 import {
   BrowserRouter as Router,
   Route,
@@ -10,16 +11,36 @@ import {
 } from "react-router-dom";
 
 class App extends Component {
-  id = 3;
+  id = 3; // 기본 ID 값
 
   state = {
     input: "",
-    todos: [
-      { id: 0, text: "리액트 소개", checked: false },
-      { id: 1, text: "JSX 사용해보기", checked: true },
-      { id: 2, text: "라이프 사이클 이해하기", checked: false },
-    ],
+    todos: [], // 초기에는 빈 배열
   };
+
+  // 컴포넌트가 마운트될 때 localStorage에서 todos를 불러옴
+  componentDidMount() {
+    const savedTodos = localStorage.getItem("todos");
+    if (savedTodos) {
+      const todos = JSON.parse(savedTodos);
+
+      // 저장된 할 일들 중에서 가장 큰 id를 찾아 this.id에 설정
+      const maxId =
+        todos.length > 0 ? Math.max(...todos.map((todo) => todo.id)) : 0;
+      this.id = maxId + 1; // 고유한 ID로 설정
+
+      this.setState({
+        todos: todos,
+      });
+    }
+  }
+
+  // todos가 업데이트될 때마다 localStorage에 저장
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.todos !== this.state.todos) {
+      localStorage.setItem("todos", JSON.stringify(this.state.todos));
+    }
+  }
 
   handleChange = (e) => {
     this.setState({
@@ -29,14 +50,17 @@ class App extends Component {
 
   handleCreate = () => {
     const { input, todos } = this.state;
-    this.setState({
-      input: "",
-      todos: todos.concat({
-        id: this.id++,
-        text: input,
-        checked: false,
-      }),
-    });
+
+    if (input.trim()) {
+      this.setState({
+        input: "",
+        todos: todos.concat({
+          id: this.id++, // 고유한 id 생성
+          text: input,
+          checked: false,
+        }),
+      });
+    }
   };
 
   handleKeyPress = (e) => {
@@ -47,14 +71,10 @@ class App extends Component {
 
   handleToggle = (id) => {
     const { todos } = this.state;
-    const index = todos.findIndex((todo) => todo.id === id);
-    const selected = todos[index];
-    const nextTodos = [...todos];
 
-    nextTodos[index] = {
-      ...selected,
-      checked: !selected.checked,
-    };
+    const nextTodos = todos.map((todo) =>
+      todo.id === id ? { ...todo, checked: !todo.checked } : todo
+    );
 
     this.setState({
       todos: nextTodos,
@@ -63,8 +83,10 @@ class App extends Component {
 
   handleRemove = (id) => {
     const { todos } = this.state;
+    const nextTodos = todos.filter((todo) => todo.id !== id);
+
     this.setState({
-      todos: todos.filter((todo) => todo.id !== id),
+      todos: nextTodos,
     });
   };
 
